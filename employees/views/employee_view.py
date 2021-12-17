@@ -1,10 +1,17 @@
 from rest_framework import viewsets
 from employees.models import Employee
-from employees.serializers import employee_serializer
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from employees.serializers.employee_serializer import EmployeeSerializer
+from rest_framework.permissions import IsAuthenticated
+from rest_framework import filters
 
 
 class EmployeeViewSet(viewsets.ModelViewSet):
-    queryset = Employee.objects.root_nodes()
-    serializer_class = employee_serializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticated]
+    queryset = Employee.get_tree()
+    serializer_class = EmployeeSerializer
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ['id', 'first_name', 'last_name', 'position', 'employment_date', 'salary']
+    ordering_fields = ['id', 'first_name', 'last_name', 'position', 'employment_date', 'salary']
+
+
+
