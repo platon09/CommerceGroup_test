@@ -10,7 +10,7 @@ class Employee(MP_Node):
     employment_date = models.DateTimeField(null=True, blank=True)
     salary = MoneyField(max_digits=14, decimal_places=2, default_currency='KZT')
 
-    node_order_by = ['first_name']
+    node_order_by = ['first_name', 'last_name']
 
     def __str__(self):
         return 'Employee: {}'.format(self.first_name)

@@ -10,5 +10,6 @@ router.register(r'employees', employee_view.EmployeeViewSet, basename='Employee'
 # Additionally, we include the login URLs for the browsable API.
 urlpatterns = [
     path('', include(router.urls)),
-    path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    path('employees/tree', employee_view.EmployeeTreeView.as_view())
 ]

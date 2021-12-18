@@ -12,7 +12,7 @@ class EmployeeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Employee
-        fields = ('id', 'first_name', 'last_name', 'position', 'employment_date', 'salary', 'parent', 'children')
+        fields = ('id', 'depth', 'first_name', 'last_name', 'position', 'employment_date', 'salary', 'parent', 'children')
 
     def get_children_nodes(self, obj):
         child_queryset = obj.get_children()
@@ -21,16 +21,23 @@ class EmployeeSerializer(serializers.ModelSerializer):
     def get_parent(self, obj):
         parent = obj.get_parent()
         if parent is None:
-            return "Босс"
+            return "no boss"
         return ParentSerializer(parent).data
 
 
 class ParentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Employee
-        fields = ('id', 'first_name', 'last_name', 'position', 'employment_date', 'salary')
+        fields = ('id', 'first_name', 'last_name', 'position')
 
 class ChildEmployeeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Employee
         fields = ('id', 'first_name', 'last_name', 'position', 'employment_date', 'salary')
+
+
+class EmployeeTreeSerializer(EmployeeSerializer):
+
+    def get_children_nodes(self, obj):
+        child_queryset = obj.get_children()
+        return EmployeeTreeSerializer(child_queryset, many=True).data
