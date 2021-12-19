@@ -1,12 +1,14 @@
 from rest_framework import viewsets
 from rest_framework.generics import ListAPIView
 from employees.models import Employee
-from employees.serializers.employee_serializer import EmployeeSerializer, EmployeeTreeSerializer
+from employees.serializers.employee_serializer import EmployeeSerializer, EmployeeTreeSerializer, CreateEmployeeSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import filters
 
 from rest_framework import status
 from rest_framework.response import Response
+from rest_framework.exceptions import NotFound
+from django.core.exceptions import ObjectDoesNotExist
 
 class EmployeeViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
@@ -16,9 +18,17 @@ class EmployeeViewSet(viewsets.ModelViewSet):
     search_fields = ['id', 'first_name', 'last_name', 'position', 'employment_date', 'salary']
     ordering_fields = ['id', 'first_name', 'last_name', 'position', 'employment_date', 'salary']
 
+    def get_serializer_class(self):
+        if self.action == 'create':
+            return CreateEmployeeSerializer
+        return EmployeeSerializer
+
     def create(self, request, *args, **kwargs):
-        parent_data = request.data.pop('parent')
-        parent = Employee.objects.get(**parent_data)
+        parent_id = request.data.pop('parent_id')
+        try:
+            parent = Employee.objects.get(id=parent_id)
+        except ObjectDoesNotExist:
+            raise NotFound({'detail': 'parent is not found'})
         parent.add_child(**request.data)
         serializer = self.get_serializer(Employee.objects.get(**request.data))
         headers = self.get_success_headers(serializer.data)

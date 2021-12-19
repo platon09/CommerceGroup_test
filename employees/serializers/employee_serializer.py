@@ -24,6 +24,11 @@ class EmployeeSerializer(serializers.ModelSerializer):
             return "no boss"
         return ParentSerializer(parent).data
 
+class CreateEmployeeSerializer(serializers.ModelSerializer):
+    parent_id = serializers.IntegerField()
+    class Meta:
+        model = Employee
+        fields = ('first_name', 'last_name', 'position', 'employment_date', 'salary', 'parent_id')
 
 class ParentSerializer(serializers.ModelSerializer):
     class Meta:

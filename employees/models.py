@@ -1,5 +1,4 @@
 from django.db import models
-from djmoney.models.fields import MoneyField
 
 from treebeard.mp_tree import MP_Node
 
@@ -8,7 +7,7 @@ class Employee(MP_Node):
     last_name = models.CharField(max_length=64)
     position = models.CharField(max_length=64)
     employment_date = models.DateTimeField(null=True, blank=True)
-    salary = MoneyField(max_digits=14, decimal_places=2, default_currency='KZT')
+    salary = models.DecimalField(max_digits=14, decimal_places=2, default=0)
 
     node_order_by = ['first_name', 'last_name']
 
