@@ -2,7 +2,7 @@ from django.urls import path, include
 from employees.views import employee_view
 from rest_framework.routers import DefaultRouter
 
-# Create a router and register our viewsets with it.
+# Create a router and register EmployeeViewSet with it.
 router = DefaultRouter()
 router.register(r'employees', employee_view.EmployeeViewSet, basename='Employee')
 
