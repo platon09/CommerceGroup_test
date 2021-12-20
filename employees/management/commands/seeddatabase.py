@@ -36,10 +36,10 @@ def create_employees(boss):
             p = s.pop()
             data = create_fake_data()
             p.add_child(**data)
-            if level <= 5:
+            if level <= 10:
                 employee = Employee.objects.get(**data)
                 s.append(employee)
-                for _ in range(5):
+                for _ in range(50):
                     data = create_fake_data()
                     employee.add_sibling(**data)
                     child = Employee.objects.get(**data)
