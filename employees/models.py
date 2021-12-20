@@ -2,6 +2,7 @@ from django.db import models
 
 from treebeard.mp_tree import MP_Node
 
+
 class Employee(MP_Node):
     first_name = models.CharField(max_length=64)
     last_name = models.CharField(max_length=64)
@@ -12,4 +13,4 @@ class Employee(MP_Node):
     node_order_by = ['first_name', 'last_name']
 
     def __str__(self):
-        return 'Employee: {}'.format(self.first_name)
+        return f'Employee: {self.first_name} {self.last_name} [{self.position}]'

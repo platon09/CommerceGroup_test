@@ -7,10 +7,10 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/v0/', include('employees.urls')),
     path('api/docs/', include_docs_urls(
-        title='Test API documentation'
+        title='Employee API documentation'
     )),
 ]
 
-admin.site.site_header = _("Test Admin")
-admin.site.site_title = _("Test Admin Portal")
-admin.site.index_title = _("Welcome to Test Portal")
+admin.site.site_header = _("Employee Administration")
+admin.site.site_title = _("Employee Admin Portal")
+admin.site.index_title = _("Welcome to Employee Portal")
