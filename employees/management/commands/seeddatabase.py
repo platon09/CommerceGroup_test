@@ -5,7 +5,7 @@ from random import randint
 
 fake = Faker()
 
-
+# generate fake data for employee
 def create_fake_data():
     data = {
         "first_name": fake.first_name(),
@@ -17,6 +17,7 @@ def create_fake_data():
     return data
 
 
+# create the most important boss(first boss)
 def create_boss():
     data = create_fake_data()
     data['path'] = '000A'
@@ -26,24 +27,24 @@ def create_boss():
 
 
 def create_employees(boss):
-    s = []
-    s.append(boss)
+    queue = []
+    queue.append(boss)
     level = 1
-    while s:
-        n = len(s)
+    while queue:
+        n = len(queue)
         level += 1
         for _ in range(n):
-            p = s.pop()
+            chief = queue.pop()
             data = create_fake_data()
-            p.add_child(**data)
+            chief.add_child(**data)
             if level <= 10:
-                employee = Employee.objects.get(**data)
-                s.append(employee)
+                subordinate = Employee.objects.get(**data)
+                queue.append(subordinate)
                 for _ in range(50):
                     data = create_fake_data()
-                    employee.add_sibling(**data)
-                    child = Employee.objects.get(**data)
-                    s.append(child)
+                    subordinate.add_sibling(**data)
+                    colleague = Employee.objects.get(**data)
+                    queue.append(colleague)
 
 
 class Command(BaseCommand):

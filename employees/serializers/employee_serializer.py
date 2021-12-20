@@ -2,47 +2,47 @@ from rest_framework import serializers
 from employees.models import Employee
 
 
-class EmployeeSerializer(serializers.ModelSerializer):
-    children = serializers.SerializerMethodField(
-        read_only=True, method_name="get_children_nodes"
+class EmployeeOutputSerializer(serializers.ModelSerializer):
+    subordinate = serializers.SerializerMethodField(
+        read_only=True, method_name="get_subordinate_nodes"
     )
-    parent = serializers.SerializerMethodField(
-        method_name="get_parent"
+    chief = serializers.SerializerMethodField(
+        method_name="get_chief"
     )
 
     class Meta:
         model = Employee
         fields = ('id', 'depth', 'first_name', 'last_name', 'position',
-                  'employment_date', 'salary', 'parent', 'children')
+                  'employment_date', 'salary', 'chief', 'subordinate')
 
     @staticmethod
-    def get_children_nodes(obj):
-        child_queryset = obj.get_children()
-        return ChildEmployeeSerializer(child_queryset, many=True).data
+    def get_subordinate_nodes(obj):
+        subordinate_queryset = obj.get_children()
+        return SubordinateSerializer(subordinate_queryset, many=True).data
 
     @staticmethod
-    def get_parent(obj):
-        parent = obj.get_parent()
-        if parent is None:
-            return "no boss"
-        return ParentSerializer(parent).data
+    def get_chief(obj):
+        chief = obj.get_parent()
+        if chief is None:
+            return "no chief"
+        return ChiefSerializer(chief).data
 
 
-class ParentSerializer(serializers.ModelSerializer):
+class ChiefSerializer(serializers.ModelSerializer):
     class Meta:
         model = Employee
         fields = ('id', 'first_name', 'last_name', 'position')
 
 
-class ChildEmployeeSerializer(serializers.ModelSerializer):
+class SubordinateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Employee
         fields = ('id', 'first_name', 'last_name', 'position', 'employment_date', 'salary')
 
 
-class CreateEmployeeSerializer(serializers.ModelSerializer):
-    parent_id = serializers.IntegerField()
+class EmployeeInputSerializer(serializers.ModelSerializer):
+    chief_id = serializers.IntegerField()
 
     class Meta:
         model = Employee
-        fields = ('first_name', 'last_name', 'position', 'employment_date', 'salary', 'parent_id')
+        fields = ('first_name', 'last_name', 'position', 'employment_date', 'salary', 'chief_id')
